@@ -58,7 +58,8 @@ export function initializeSentry() {
             }),
         ],
         beforeSend: (event: Event) => {
-            if (isBetaApp || event?.level === 'fatal') {
+            const eventFilter = Array.isArray(Config.SentryOptions.severityLevelFilter) ? Config.SentryOptions.severityLevelFilter : [];
+            if (isBetaApp || eventFilter.includes(event?.level)) {
                 return event;
             }
 
