@@ -389,12 +389,13 @@ platform :ios do
 
   lane :update_identifiers do
     # Set the name for the app
-    app_name =  ENV['APP_NAME'] || 'Mattermost Beta'
-    update_info_plist(
-        xcodeproj: './ios/Mattermost.xcodeproj',
-        plist_path: 'Mattermost/Info.plist',
-        display_name: app_name
-    )
+    unless ENV['APP_NAME'].nil? || ENV['APP_NAME'].empty?
+      find_replace_string(
+        path_to_file: './ios/Mattermost.xcodeproj/project.pbxproj',
+        old_string: 'APP_NAME = "Mattermost Beta"',
+        new_string: "APP_NAME = \"#{ENV['APP_NAME']}\""
+      )
+    end
 
     # Set the notification service extension bundle identifier
     notification_bundle_id = ENV['NOTIFICATION_SERVICE_IDENTIFIER'] || 'com.mattermost.rnbeta.NotificationService'
